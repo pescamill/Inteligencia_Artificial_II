@@ -1,0 +1,67 @@
+
+
+class Point {
+  constructor(x_, y_, value_) {
+    this.x = x_ || random(-1, 1);
+    this.y = y_ || random(-1, 1);
+    this.bias = 1;
+    this.predicted = false;
+    this.prediction = 0;
+    this.adalinePrediction = 0;
+    if (value_) {
+      this.label = 1;
+    } else {
+      this.label = -1;
+    } 
+    this.valueAdaline = 0;
+  }
+
+  set isPredicted(predicted){
+    this.predicted = predicted;
+  }
+
+  set isvalueAdaline(valueAdaline){
+    this.valueAdaline = valueAdaline;
+  }
+
+  pixelX() {
+    return map(this.x, -1, 1, 0, width);
+  }
+
+  pixelY() {
+    return map(this.y, -1, 1, height, 0);
+  }
+
+  show() {
+    stroke(0);
+    fill(0);
+
+    if (this.label == 1) {
+      fill(0, 0, 255);
+    } else {
+      fill(255, 0, 0);
+    }
+
+    let px = this.pixelX();
+    let py = this.pixelY();
+    ellipse(px, py, 7, 7);
+  }
+
+  showAdaline(){
+    stroke(0);
+    fill(0);
+
+    let c = map(this.valueAdaline, 2, 0, 1, 255);
+    let d = map(this.valueAdaline, 0, 1, 50, 255);
+
+    if (this.valueAdaline >= 0) {
+      fill(0, c, 255);
+    } else {
+      fill(255, d, 0);
+    } 
+
+    let px = this.pixelX();
+    let py = this.pixelY();
+    ellipse(px, py, 6, 6);
+  }
+}
