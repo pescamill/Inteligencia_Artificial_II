@@ -30,6 +30,8 @@ let points = [],
   status = "ready",
   notice = "",
   probe = null;
+let probePoints = [];
+let lastEpochTime = 0;
 let settings = { rate: 0.3, epochs: 1000, seed: 42, hidden: [8, 8] };
 const nonlinear = () => algorithm === "backprop" || algorithm === "quickprop";
 const classes = () =>
@@ -55,6 +57,7 @@ function reset() {
   status = "ready";
   setNotice();
   probe = null;
+  probePoints = [];
   model =
     formulation === "coursework"
       ? nonlinear()
@@ -201,13 +204,20 @@ function drawPlot() {
     ctx.fill();
     ctx.stroke();
   }
-  if (probe) {
-    const x = ((probe.x + 1) * size) / 2,
-      y = ((1 - probe.y) * size) / 2;
+  for (const point of probePoints) {
+    const x = ((point.x + 1) * size) / 2,
+      y = ((1 - point.y) * size) / 2;
+    ctx.fillStyle = outputColor(model, point, algorithm, formulation);
     ctx.strokeStyle = "#263a37";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(x, y, 9, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 11, 0, Math.PI * 2);
     ctx.stroke();
   }
 }
@@ -297,6 +307,16 @@ function render() {
   $("prediction").textContent = probe
     ? `${t("prediction")}: ${t("class")} ${"ABC"[model.predict(probe)]} · (${probe.x.toFixed(2)}, ${probe.y.toFixed(2)}) · ${nonlinear() ? t(formulation === "coursework" ? "activations" : "probabilities") + ": " + (formulation === "coursework" ? model.outputs(probe) : model.probabilities(probe)).map((v, i) => "ABC"[i] + "=" + v.toFixed(3)).join(" · ") : "z=" + model.score(probe).toFixed(3) + (algorithm === "adaline" && formulation === "coursework" ? " · σ(z)=" + f(model.score(probe)).toFixed(3) : "")}`
     : "";
+  $("prediction-swatch").hidden = !probe;
+  $("clear-predictions").disabled = probePoints.length === 0;
+  $("probe-count").textContent = String(probePoints.length);
+  if (probe)
+    $("prediction-swatch").style.backgroundColor = outputColor(
+      model,
+      probe,
+      algorithm,
+      formulation,
+    );
   drawPlot();
   drawCurve();
 }
@@ -336,12 +356,18 @@ function oneEpoch() {
     status = "complete";
   }
 }
-function tick() {
+function tick(timestamp) {
   if (!running) return;
+  const speed = $("animation-speed").value;
+  if (speed !== "fast" && timestamp - lastEpochTime < 1000 / Number(speed)) {
+    frame = requestAnimationFrame(tick);
+    return;
+  }
+  lastEpochTime = timestamp;
   const start = performance.now();
   do {
     oneEpoch();
-  } while (running && performance.now() - start < 12);
+  } while (running && speed === "fast" && performance.now() - start < 12);
   render();
   if (running) frame = requestAnimationFrame(tick);
 }
@@ -354,6 +380,7 @@ $("train").onclick = () => {
   }
   if (!canTrain()) return;
   running = true;
+  lastEpochTime = performance.now();
   status = "running";
   render();
   frame = requestAnimationFrame(tick);
@@ -424,6 +451,8 @@ $("plot").onclick = (e) => {
     y = Math.max(-1, Math.min(1, 1 - ((e.clientY - box.top) / box.height) * 2));
   if ($("mode").value === "probe") {
     probe = { x, y };
+    probePoints.push(probe);
+    if (probePoints.length > 100) probePoints.shift();
     render();
   } else addPoint(x, y);
 };
@@ -476,3 +505,12 @@ $("plot").onkeydown = (event) => {
 $("dataset").querySelector("[value=clusters]").disabled = !nonlinear();
 loadData();
 translate();
+
+$("animation-speed").onchange = () => {
+  lastEpochTime = performance.now();
+};
+$("clear-predictions").onclick = () => {
+  probe = null;
+  probePoints = [];
+  render();
+};

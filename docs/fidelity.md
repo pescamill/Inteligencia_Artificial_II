@@ -58,3 +58,9 @@ Las correcciones necesarias son: objetivos 0/1 para la sigmoide; entradas de cap
 Se recuperan las rampas de intensidad y la mezcla RGB. En Adaline representan la salida lineal, no distancia a ejemplos. En tu NN representan activaciones independientes, no probabilidades normalizadas. Las líneas de neuronas y el cambio de clase con Espacio están disponibles. El cambio de clase por teclado solo funciona con el plano enfocado.
 
 Las pruebas comparan directamente operaciones con tus clases originales y verifican además los gradientes y el comportamiento en el navegador. El diseño visual, los límites de arquitectura, la visualización por época y el entrenamiento de un solo algoritmo a la vez siguen siendo cambios respecto a tu interfaz original.
+
+## Why playback became faster
+
+Originally, `nextIteration` processed one point per timer callback. The UI also redrew neuron lines frequently, and updating the chart incurred rendering overhead. The revamped Fast loop spends up to 12 ms training full epochs before rendering a frame. Timer intervals such as 0.00001 ms never guaranteed execution at that physical frequency; scheduling and rendering overhead dominated.
+
+Observe and Medium now display individual epochs at capped rates (5 or 30 per second), without changing the numerical learning rate. They do not reproduce every original per-point visual update. The corrected target handling, propagation and error metric can also change the apparent convergence, so runtime differences alone are not evidence of a better learning algorithm.
