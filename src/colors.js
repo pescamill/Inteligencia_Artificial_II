@@ -16,7 +16,7 @@ export function outputColor(
   if (discrete) return palette[model.predict(p)];
   if (algorithm === "perceptron" || algorithm === "adaline") {
     const valueAdaline = model.score(p);
-    // Pablo's original two-sided map(valueAdaline, 2, 0, 100, 255).
+    // My original two-sided map(valueAdaline, 2, 0, 100, 255).
     // Clamp only the display channel; never clamp the model's score.
     const c = byte(255 - Math.abs(valueAdaline) * 77.5);
     return valueAdaline >= 0 ? `rgb(0, ${c}, 255)` : `rgb(255, ${c}, 0)`;

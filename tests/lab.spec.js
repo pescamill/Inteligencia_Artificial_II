@@ -451,3 +451,74 @@ test("contradictory labels cannot falsely converge and epoch limit stops further
   await expect(page.locator("#train")).toBeDisabled();
   await expect(page.locator("#epoch")).toHaveText("10");
 });
+
+for (const formulation of ["coursework", "revised"]) {
+  for (const algorithm of ["backprop", "quickprop"]) {
+    test(`${formulation} ${algorithm}: explicit custom classes learn A/B/C and protect C points`, async ({
+      page,
+    }) => {
+      await page.goto(`/?algorithm=${algorithm}&formulation=${formulation}`);
+      await page.getByLabel("Dataset", { exact: true }).selectOption("custom");
+      await expect(page.getByLabel("Number of classes")).toHaveValue("3");
+      await page.getByText("Add an exact point", { exact: true }).click();
+      const samples = [
+        ["A", -0.8, -0.8],
+        ["B", 0.8, -0.8],
+        ["C", 0, 0.8],
+      ];
+      for (const [label, x, y] of samples) {
+        if (label === "C") {
+          await page.locator("#step").click();
+          await expect(page.locator("#epoch")).toHaveText("0");
+          await expect(page.getByRole("alert")).toContainText("A, B and C");
+        }
+        await page
+          .getByRole("button", { name: `Class ${label}`, exact: true })
+          .click();
+        await page.locator("#point-x").fill(String(x));
+        await page.locator("#point-y").fill(String(y));
+        await page
+          .getByRole("button", { name: "Add point", exact: true })
+          .click();
+      }
+      await page.getByLabel("Number of classes").selectOption("2");
+      await expect(page.getByLabel("Number of classes")).toHaveValue("3");
+      await expect(page.getByRole("alert")).toContainText(
+        "Class C points are still present",
+      );
+      await expect(page.locator("#point-count")).toHaveText("3");
+      await configure(page, 500);
+      await train(page);
+      expect(await accuracy(page)).toBe(100);
+      await expect(page.locator("#confusion td.correct")).toHaveText([
+        "1",
+        "1",
+        "1",
+      ]);
+      await page.locator("#clear").click();
+      await page.getByLabel("Number of classes").selectOption("2");
+      await expect(page.locator("#classes button")).toHaveCount(2);
+      await expect(page.locator("#architecture")).toHaveText("2 → 8 → 8 → 2");
+      await expect(page.locator("#confusion td")).toHaveCount(4);
+      await page.locator("#mode").selectOption("probe");
+      await page.locator("#plot").click();
+      await expect(page.locator("#prediction")).toContainText("B=");
+      await expect(page.locator("#prediction")).not.toContainText("C=");
+      await page.getByRole("button", { name: "ES", exact: true }).click();
+      await expect(page.getByLabel("Número de clases")).toHaveValue("2");
+    });
+  }
+}
+
+test("custom class count stays binary for linear models", async ({ page }) => {
+  for (const algorithm of ["perceptron", "adaline"]) {
+    await page.goto(`/?algorithm=${algorithm}`);
+    await page.locator("#dataset").selectOption("custom");
+    await expect(page.getByLabel("Number of classes")).toBeDisabled();
+    await expect(page.getByLabel("Number of classes")).toHaveValue("2");
+    await expect(page.locator("#classes button")).toHaveCount(2);
+    await expect(page.locator("#custom-class-hint")).toContainText(
+      "support two classes",
+    );
+  }
+});
