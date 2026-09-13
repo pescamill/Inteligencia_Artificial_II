@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Explore Perceptron, Adaline, Backpropagation and QuickProp in an interactive English and Spanish machine learning lab."
+    />
+    <meta name="theme-color" content="#f5f6f8" />
+    <title>Neural Lab · Inteligencia Artificial II</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%232d6257'/%3E%3Cpath d='M10 29V11l20 18V11' stroke='white' fill='none' stroke-width='3'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="src/styles.css" />
+    <script type="module" src="src/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./"
+        ><span class="brand-icon">N</span>neural<span class="brand-light"
+          >lab</span
+        ><span class="edition">II</span></a
+      ><span class="top-caption" data-i18n="lab"></span>
+      <div class="languages" aria-label="Language / Idioma">
+        <button id="en" lang="en" aria-pressed="true">EN</button
+        ><button id="es" lang="es" aria-pressed="false">ES</button>
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow" data-i18n="eyebrow"></p>
+          <h1 data-i18n="title"></h1>
+          <p class="intro" data-i18n="intro"></p>
+        </div>
+        <div class="hero-mark" aria-hidden="true">
+          <span>∑</span><i></i><span>ƒ</span><i></i><span>ŷ</span>
+        </div>
+      </section>
+      <nav class="algorithms" aria-label="Algorithms">
+        <button data-algorithm="perceptron">
+          <small>01</small>Perceptron<span>↗</span></button
+        ><button data-algorithm="adaline">
+          <small>02</small>Adaline<span>↗</span></button
+        ><button data-algorithm="backprop">
+          <small>03</small>Backpropagation<span>↗</span></button
+        ><button data-algorithm="quickprop">
+          <small>04</small>QuickProp<span>↗</span>
+        </button>
+      </nav>
+      <div class="section-heading">
+        <div>
+          <span class="dot"></span><strong id="model-name"></strong
+          ><span class="muted" id="subtitle"></span>
+        </div>
+        <a href="#explanation" data-i18n="read"></a>
+      </div>
+      <div class="workspace">
+        <aside class="card controls">
+          <div class="card-title">
+            <span class="section-num">01</span>
+            <h2 data-i18n="experiment"></h2>
+          </div>
+          <label for="formulation" data-i18n="formulation"></label>
+          <select id="formulation">
+            <option value="coursework" data-i18n="coursework"></option>
+            <option value="revised" data-i18n="revised"></option>
+          </select>
+          <p class="micro" data-i18n="formulationHint"></p>
+          <label for="dataset" data-i18n="dataset"></label
+          ><select id="dataset">
+            <option value="linear" data-i18n="linear"></option>
+            <option value="xor" data-i18n="xor"></option>
+            <option value="circles" data-i18n="circles"></option>
+            <option value="clusters" data-i18n="clusters"></option>
+            <option value="custom" data-i18n="custom"></option>
+          </select>
+          <div
+            class="dataset-preview"
+            aria-hidden="true"
+            id="dataset-preview"
+          ></div>
+          <div class="divider"></div>
+          <h3 data-i18n="parameters"></h3>
+          <form id="settings" novalidate>
+            <div class="field-pair">
+              <div>
+                <label for="rate" data-i18n="rate"></label
+                ><input
+                  id="rate"
+                  type="number"
+                  value="0.3"
+                  min="0.001"
+                  max="1"
+                  step="0.001"
+                  required
+                />
+              </div>
+              <div>
+                <label for="epochs" data-i18n="epochs"></label
+                ><input
+                  id="epochs"
+                  type="number"
+                  value="1000"
+                  min="1"
+                  max="5000"
+                  step="1"
+                  required
+                />
+              </div>
+            </div>
+            <div id="hidden-field">
+              <label for="hidden" data-i18n="hidden"></label
+              ><input
+                id="hidden"
+                value="8, 8"
+                aria-describedby="hidden-hint"
+              /><small id="hidden-hint" data-i18n="hiddenHint"></small>
+            </div>
+            <label for="seed" data-i18n="seed"></label
+            ><input
+              id="seed"
+              type="number"
+              value="42"
+              min="0"
+              max="4294967295"
+              step="1"
+              required
+            />
+            <button
+              class="secondary full"
+              type="submit"
+              data-i18n="apply"
+            ></button>
+          </form>
+          <p class="micro" data-i18n="settingsNote"></p>
+          <div class="divider"></div>
+          <div class="architecture-label" data-i18n="architecture"></div>
+          <div id="architecture"></div>
+        </aside>
+        <section class="card plot-card">
+          <div class="card-title plot-title">
+            <div>
+              <span class="section-num">02</span>
+              <h2 data-i18n="boundary"></h2>
+            </div>
+            <span class="live-badge"
+              ><span class="dot"></span><span id="status" role="status"></span
+            ></span>
+          </div>
+          <div class="plot-toolbar">
+            <div class="class-buttons" id="classes"></div>
+            <select id="mode" aria-label="Plot interaction">
+              <option value="add" data-i18n="add"></option>
+              <option value="probe" data-i18n="probe"></option>
+            </select>
+          </div>
+          <div class="visual-options">
+            <label for="color-mode" data-i18n="colorMode"></label
+            ><select id="color-mode">
+              <option value="gradient" data-i18n="gradientMode"></option>
+              <option value="classes" data-i18n="classMode"></option></select
+            ><label class="check"
+              ><input type="checkbox" id="neuron-lines" /><span
+                data-i18n="neuronLines"
+              ></span
+            ></label>
+          </div>
+          <p class="micro" id="gradient-legend"></p>
+          <div class="plot-wrap">
+            <canvas
+              id="plot"
+              tabindex="0"
+              width="560"
+              height="560"
+              role="img"
+              aria-label="Decision boundary"
+              aria-describedby="plot-hint"
+            ></canvas
+            ><span class="axis-y">x₂</span><span class="axis-x">x₁</span>
+          </div>
+          <div class="plot-bottom">
+            <span
+              ><b id="point-count">90</b>
+              <span data-i18n="pointCount"></span></span
+            ><button id="clear" class="text-button" data-i18n="clear"></button>
+          </div>
+          <p id="plot-hint" class="micro" data-i18n="boundaryHint"></p>
+          <p id="prediction" aria-live="polite"></p>
+          <details class="manual">
+            <summary data-i18n="manual"></summary>
+            <form id="point-form">
+              <label
+                >x
+                <input
+                  id="point-x"
+                  type="number"
+                  min="-1"
+                  max="1"
+                  step="0.01"
+                  value="0"
+                  required /></label
+              ><label
+                >y
+                <input
+                  id="point-y"
+                  type="number"
+                  min="-1"
+                  max="1"
+                  step="0.01"
+                  value="0"
+                  required /></label
+              ><button
+                type="submit"
+                class="secondary"
+                data-i18n="addPoint"
+              ></button>
+            </form>
+          </details>
+          <div class="training-actions">
+            <button id="train" class="primary" data-i18n="train"></button
+            ><button id="step" class="secondary" data-i18n="step"></button
+            ><button id="reset" class="icon-button" data-i18n="reset"></button>
+          </div>
+          <p id="notice" class="notice" role="alert" hidden></p>
+          <p id="linear-note" class="micro" data-i18n="linearNote" hidden></p>
+        </section>
+        <aside class="results">
+          <section class="card metrics-card">
+            <div class="card-title">
+              <span class="section-num">03</span>
+              <h2 data-i18n="curve"></h2>
+            </div>
+            <div class="big-metric">
+              <span data-i18n="accuracy"></span
+              ><strong id="accuracy">0<span>%</span></strong>
+            </div>
+            <div class="metric-row">
+              <div>
+                <span data-i18n="epoch"></span><strong id="epoch">0</strong>
+              </div>
+              <div>
+                <span data-i18n="loss"></span><strong id="loss">0.0000</strong>
+              </div>
+            </div>
+            <svg
+              id="loss-chart"
+              viewBox="0 0 300 130"
+              role="img"
+              aria-label="Learning curve"
+            ></svg>
+            <p class="micro" data-i18n="curveHint"></p>
+            <p class="metrics-note" data-i18n="metricsNote"></p>
+          </section>
+          <section class="card breakdown">
+            <h3 data-i18n="confusion"></h3>
+            <div id="confusion"></div>
+          </section>
+          <a class="guide-link" href="#explanation"
+            ><span aria-hidden="true">⌘</span>
+            <div>
+              <small data-i18n="guide"></small><strong id="guide-name"></strong>
+            </div>
+            <span>↘</span></a
+          >
+        </aside>
+      </div>
+      <section id="explanation" class="explanation">
+        <div class="explanation-heading">
+          <p id="article-tag" class="eyebrow"></p>
+          <h2 id="article-title"></h2>
+          <p id="article-intuition"></p>
+        </div>
+        <div class="explanation-grid">
+          <article>
+            <h3 data-i18n="steps"></h3>
+            <ol id="article-steps"></ol>
+          </article>
+          <article class="formula-card">
+            <h3 data-i18n="equation"></h3>
+            <pre id="formula"></pre>
+            <p id="article-detail"></p>
+          </article>
+          <article>
+            <h3 data-i18n="limitations"></h3>
+            <p id="article-limitations"></p>
+            <div class="try">
+              <strong data-i18n="try"></strong>
+              <p id="article-try"></p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div>
+        <strong data-i18n="built"></strong><span data-i18n="footer"></span>
+      </div>
+      <a
+        href="https://github.com/pescamill/Inteligencia_Artificial_II"
+        data-i18n="source"
+      ></a>
+    </footer>
+  </body>
+</html>
