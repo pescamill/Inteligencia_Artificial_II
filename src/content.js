@@ -1,5 +1,14 @@
 export const copy = {
   en: {
+    customClasses: "Number of classes",
+    twoClasses: "2 classes · A, B",
+    threeClasses: "3 classes · A, B, C",
+    customClassHint:
+      "The class buttons select A, B or C before adding points. Each selected class needs a training point. Changing the number resets training.",
+    binaryClassHint:
+      "Perceptron and Adaline support two classes. Backpropagation and QuickProp support three.",
+    thirdClassPresent:
+      "Class C points are still present. Clear points before switching to two classes.",
     animationSpeed: "Animation speed",
     slowSpeed: "Observe · up to 5 epochs/s",
     mediumSpeed: "Medium · up to 30 epochs/s",
@@ -11,10 +20,10 @@ export const copy = {
     probeHint:
       "Prediction points mix the current model outputs as RGB (linear models use their score ramp). They never train the model. The last 100 are kept; resetting clears them.",
     formulation: "Mathematical formulation",
-    coursework: "Your coursework · corrected",
+    coursework: "My past code · corrected",
     revised: "Revised alternatives",
     formulationHint:
-      "The coursework preserves your sigmoid neurons, thresholds and learning rules, with documented mathematical fixes.",
+      "The coursework preserves my sigmoid neurons, thresholds and learning rules, with documented mathematical fixes.",
     colorMode: "Color view",
     gradientMode: "Continuous outputs",
     classMode: "Winning class",
@@ -74,7 +83,7 @@ export const copy = {
     complete: "Epoch limit reached",
     converged: "All training points classified",
     empty:
-      "Add points from at least two classes (all three for the three-class preset).",
+      "Training needs points from at least two classes; three-class experiments require A, B and C.",
     invalid:
       "Use a rate from 0.001 to 1, 1–5000 epochs, a non-negative integer seed, and 1–3 hidden layers of 1–16 neurons.",
     limit: "Maximum 300 points. Clear points to start again.",
@@ -106,6 +115,15 @@ export const copy = {
     noCurve: "Train the model to trace its learning curve.",
   },
   es: {
+    customClasses: "Número de clases",
+    twoClasses: "2 clases · A, B",
+    threeClasses: "3 clases · A, B, C",
+    customClassHint:
+      "Los botones de clase seleccionan A, B o C antes de añadir puntos. Cada clase elegida necesita un punto de entrenamiento. Cambiar el número reinicia el entrenamiento.",
+    binaryClassHint:
+      "Perceptrón y Adaline admiten dos clases. Backpropagation y QuickProp admiten tres.",
+    thirdClassPresent:
+      "Todavía hay puntos de clase C. Es necesario borrar los puntos antes de cambiar a dos clases.",
     animationSpeed: "Velocidad de animación",
     slowSpeed: "Observar · hasta 5 épocas/s",
     mediumSpeed: "Media · hasta 30 épocas/s",
@@ -117,10 +135,10 @@ export const copy = {
     probeHint:
       "Los puntos de predicción mezclan las salidas actuales como RGB (los modelos lineales usan su rampa). No entrenan el modelo. Se conservan los últimos 100; reiniciar los borra.",
     formulation: "Formulación matemática",
-    coursework: "Tu código original · corregido",
+    coursework: "Mi código pasado · corregido",
     revised: "Alternativas revisadas",
     formulationHint:
-      "La versión original conserva tus neuronas sigmoides, umbrales y reglas de aprendizaje, con correcciones matemáticas documentadas.",
+      "La versión original conserva mis neuronas sigmoides, umbrales y reglas de aprendizaje, con correcciones matemáticas documentadas.",
     colorMode: "Vista de color",
     gradientMode: "Salidas continuas",
     classMode: "Clase ganadora",
@@ -180,7 +198,7 @@ export const copy = {
     complete: "Límite de épocas alcanzado",
     converged: "Todos los puntos de entrenamiento clasificados",
     empty:
-      "Añade puntos de al menos dos clases (las tres para el conjunto de tres clases).",
+      "Se necesitan puntos de al menos dos clases; los experimentos de tres clases requieren A, B y C.",
     invalid:
       "Usa una tasa entre 0.001 y 1, 1–5000 épocas, una semilla entera no negativa y 1–3 capas ocultas de 1–16 neuronas.",
     limit: "Máximo de 300 puntos. Borra los puntos para empezar de nuevo.",
@@ -199,7 +217,7 @@ export const copy = {
     intuition: "La intuición",
     steps: "Una época de entrenamiento",
     equation: "Regla de actualización",
-    limitations: "Qué debes observar",
+    limitations: "Aspectos a observar",
     try: "Prueba este experimento",
     built: "Construido desde las matemáticas.",
     footer: "Pablo Escamilla · Un estudio interactivo del aprendizaje neuronal",

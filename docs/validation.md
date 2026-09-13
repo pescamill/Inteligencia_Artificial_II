@@ -1,6 +1,6 @@
 # Validation — 2026-09-13
 
-- **88/88 Playwright scenarios passed**, no retries, in 41.7 seconds.
+- **98/98 Playwright scenarios passed**, no retries, in 49.7 seconds.
 - **12/12 numerical and fidelity tests passed**.
 - Desktop (1440 px) and Spanish mobile (390 px) screenshots visually inspected after restoring the continuous output colors.
 - Browser tests fail on page errors, console errors and HTTP errors.
@@ -26,8 +26,12 @@ The screenshots use the coursework backpropagation model, circles, seed 42, hidd
 
 ## Animation, prediction and negative-case update
 
-The 88 browser runs include 26 additional negative-case runs across both viewports: invalid learning rates, epoch counts, seeds and architectures; one-class data; invalid coordinates; and contradictory labels at an identical coordinate. Invalid settings must leave epoch and loss unchanged. Contradictory labels must reach the epoch limit without reporting convergence.
+The earlier 88 browser runs include 26 additional negative-case runs across both viewports: invalid learning rates, epoch counts, seeds and architectures; one-class data; invalid coordinates; and contradictory labels at an identical coordinate. Invalid settings must leave epoch and loss unchanged. Contradictory labels must reach the epoch limit without reporting convergence.
 
 Additional checks verify deterministic one-epoch observation playback and prediction-marker colors/persistence without adding training samples. These UI changes do not modify the numerical algorithms; the 12 numerical tests were already passing for this unchanged core. Hosted CI runs both suites again.
 
 Screenshots of the updated controls and predictions: `prediction-points-desktop.png` and `prediction-points-mobile.png` (Spanish).
+
+## College presentation and custom class selector
+
+The current suite contains 49 scenarios, each run in desktop and mobile Chromium (98 passing runs, without retries). The ten new runs verify custom A/B/C learning in Backpropagation and QuickProp with both formulations, missing-class rejection, protection of existing C points, two-output architecture and prediction display, Spanish class controls, and binary restrictions for linear models. Documentation and screenshots now use the author’s first-person perspective; the README contains equivalent English and Spanish overviews of the college coursework and its later development.

@@ -1,6 +1,6 @@
-# Fidelity to Pablo's original coursework
+# Fidelity to my original coursework
 
-The default is **Your coursework · corrected**. The first revamp's algorithms remain under **Revised alternatives**. Original files remain untouched, apart from the previously introduced entry-page redirects; `legacy.html` preserves the original page.
+The default is **My past code · corrected**. The first revamp's algorithms remain under **Revised alternatives**. Original files remain untouched, apart from the previously introduced entry-page redirects; `legacy.html` preserves the original page.
 
 ## What is kept
 
@@ -14,7 +14,7 @@ The default is **Your coursework · corrected**. The first revamp's algorithms r
 | Sigmoids in every NN layer | Preserved; no tanh or softmax in the default |
 | Fixed −1 neuron threshold | Preserved in every NN neuron; it is a valid constraint |
 | Constant input `1` for the first layer | Preserved with its trainable weight; no new trainable biases in later layers |
-| Three independent NN outputs | Preserved even for two-class presets; custom points can use A, B and C |
+| Three independent NN outputs | Preserved for presets; custom experiments explicitly select two or three outputs |
 | Squared-error derivative with factor −2 | Preserved |
 | Per-point NN backpropagation | Preserved; an epoch visits all points in order |
 | QuickProp `prev_s`, `prev_g`, `s`, `difference`, `temp`, `g` | Preserved with the secant-plus-gradient structure |
@@ -51,13 +51,13 @@ The numerical tests execute the untouched original classes in isolated JavaScrip
 
 ## Español
 
-La opción predeterminada es **Tu código original · corregido**. Conserva los objetos neurona, nombres, sigmoides, umbral fijo −1, tres salidas, error cuadrático y retropropagación por punto. Las alternativas tanh/softmax y Adaline lineal se eligen explícitamente.
+La opción predeterminada es **Mi código pasado · corregido**. Conserva los objetos neurona, nombres, sigmoides, umbral fijo −1, tres salidas en los conjuntos predefinidos (dos o tres en Puntos propios), error cuadrático y retropropagación por punto. Las alternativas tanh/softmax y Adaline lineal se eligen explícitamente.
 
 Las correcciones necesarias son: objetivos 0/1 para la sigmoide; entradas de capa sin modificar; error cuadrático de las tres salidas; QuickProp con pendientes del mismo objetivo y pasos acotados; colores en el rango real [0,1] alineados con las clases; coordenadas cero válidas y líneas verticales sin división por cero. El umbral fijo −1 no se elimina: es matemáticamente válido.
 
-Se recuperan las rampas de intensidad y la mezcla RGB. En Adaline representan la salida lineal, no distancia a ejemplos. En tu NN representan activaciones independientes, no probabilidades normalizadas. Las líneas de neuronas y el cambio de clase con Espacio están disponibles. El cambio de clase por teclado solo funciona con el plano enfocado.
+Se recuperan las rampas de intensidad y la mezcla RGB. En Adaline representan la salida lineal, no distancia a ejemplos. En mi NN representan activaciones independientes, no probabilidades normalizadas. Las líneas de neuronas y el cambio de clase con Espacio están disponibles. El cambio de clase por teclado solo funciona con el plano enfocado.
 
-Las pruebas comparan directamente operaciones con tus clases originales y verifican además los gradientes y el comportamiento en el navegador. El diseño visual, los límites de arquitectura, la visualización por época y el entrenamiento de un solo algoritmo a la vez siguen siendo cambios respecto a tu interfaz original.
+Las pruebas comparan directamente operaciones con mis clases originales y verifican además los gradientes y el comportamiento en el navegador. El diseño visual, los límites de arquitectura, la visualización por época y el entrenamiento de un solo algoritmo a la vez siguen siendo cambios respecto a mi interfaz original.
 
 ## Why playback became faster
 

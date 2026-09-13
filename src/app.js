@@ -34,12 +34,14 @@ let probePoints = [];
 let lastEpochTime = 0;
 let settings = { rate: 0.3, epochs: 1000, seed: 42, hidden: [8, 8] };
 const nonlinear = () => algorithm === "backprop" || algorithm === "quickprop";
-const classes = () =>
-  (nonlinear() && formulation === "coursework") ||
-  $("dataset").value === "clusters" ||
-  points.some((p) => p.label === 2)
+let customClasses = 3;
+const classes = () => {
+  if (!nonlinear()) return 2;
+  if ($("dataset").value === "custom") return customClasses;
+  return formulation === "coursework" || $("dataset").value === "clusters"
     ? 3
     : 2;
+};
 const t = (key) => copy[language][key];
 function stop() {
   running = false;
@@ -63,7 +65,7 @@ function reset() {
       ? nonlinear()
         ? new NN(
             settings.hidden.length,
-            3,
+            classes(),
             3,
             settings.hidden,
             settings.rate,
@@ -243,6 +245,12 @@ function drawCurve() {
 function render() {
   palette = pointPalette(algorithm);
   $("formulation").value = formulation;
+  $("custom-class-field").hidden = $("dataset").value !== "custom";
+  $("custom-classes").value = String(nonlinear() ? customClasses : 2);
+  $("custom-classes").disabled = !nonlinear();
+  $("custom-class-hint").textContent = t(
+    nonlinear() ? "customClassHint" : "binaryClassHint",
+  );
   $("gradient-legend").textContent = t(
     nonlinear()
       ? formulation === "coursework"
@@ -323,7 +331,7 @@ function render() {
 function canTrain() {
   if (
     new Set(points.map((p) => p.label)).size <
-    ($("dataset").value === "clusters" ? 3 : 2)
+    (["clusters", "custom"].includes($("dataset").value) ? classes() : 2)
   ) {
     setNotice("empty");
     return false;
@@ -400,6 +408,17 @@ $("clear").onclick = () => {
   reset();
 };
 $("dataset").onchange = loadData;
+$("custom-classes").onchange = () => {
+  const count = Number($("custom-classes").value);
+  if (count === 2 && points.some((p) => p.label === 2)) {
+    $("custom-classes").value = String(customClasses);
+    setNotice("thirdClassPresent");
+    return;
+  }
+  customClasses = count;
+  selectedClass = 0;
+  reset();
+};
 $("settings").onsubmit = (e) => {
   e.preventDefault();
   const rate = Number($("rate").value),

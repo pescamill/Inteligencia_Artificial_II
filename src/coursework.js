@@ -1,4 +1,4 @@
-// Adapted from Pablo's Perceptron/, Adaline/ and NN/ coursework.
+// Adapted from My Perceptron/, Adaline/ and NN/ coursework.
 // Keep the neuron objects, Spanish counters and original method vocabulary.
 import { random } from "./models.js";
 export function activationFn(input) {
