@@ -1,0 +1,20 @@
+{
+  "name": "inteligencia-artificial-ii",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A bilingual, interactive neural learning lab with behavioral Playwright coverage.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:math": "node --test tests/models.test.js",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
