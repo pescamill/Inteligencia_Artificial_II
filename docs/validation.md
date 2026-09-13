@@ -1,6 +1,6 @@
 # Validation — 2026-09-13
 
-- **58/58 Playwright scenarios passed**, no retries, in 36.6 seconds.
+- **88/88 Playwright scenarios passed**, no retries, in 41.7 seconds.
 - **12/12 numerical and fidelity tests passed**.
 - Desktop (1440 px) and Spanish mobile (390 px) screenshots visually inspected after restoring the continuous output colors.
 - Browser tests fail on page errors, console errors and HTTP errors.
@@ -23,3 +23,11 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/tmp/chromium npm test
 ```
 
 The screenshots use the coursework backpropagation model, circles, seed 42, hidden layers `[8, 8]`, learning rate 0.3, and 100 epochs: 100% training accuracy and loss approximately 0.0021. These results concern the training dataset. Local results are not a claim about a hosted CI run, all possible datasets, or physical mobile devices.
+
+## Animation, prediction and negative-case update
+
+The 88 browser runs include 26 additional negative-case runs across both viewports: invalid learning rates, epoch counts, seeds and architectures; one-class data; invalid coordinates; and contradictory labels at an identical coordinate. Invalid settings must leave epoch and loss unchanged. Contradictory labels must reach the epoch limit without reporting convergence.
+
+Additional checks verify deterministic one-epoch observation playback and prediction-marker colors/persistence without adding training samples. These UI changes do not modify the numerical algorithms; the 12 numerical tests were already passing for this unchanged core. Hosted CI runs both suites again.
+
+Screenshots of the updated controls and predictions: `prediction-points-desktop.png` and `prediction-points-mobile.png` (Spanish).

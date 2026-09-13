@@ -36,6 +36,12 @@ Colors show model responses, not geometric distance to training examples. Indepe
 
 Choose a dataset, edit settings with **Apply & reset**, train, pause, step one epoch, or reset. Click to add labeled points, or use exact coordinate entry. Coursework networks retain three output classes in custom mode. Accuracy, loss and confusion matrices describe the training points, not unseen-data performance.
 
+## Animation and prediction points
+
+The default **Observe** speed displays up to five epochs per second; Medium displays up to thirty. Fast computes multiple epochs between frames. These controls affect playback only, not the learning rate or update rule. Enable **Neuron boundaries** to watch the first-layer lines move. An observed step is still one complete epoch, rather than the original per-sample redraw.
+
+Prediction clicks now leave colored circles on the plot. Their RGB fill follows the current activations (or the linear score ramp), including in the discrete background view. They never become training samples. The last 100 are retained; **Clear predictions** removes them without resetting the model. A model reset clears them.
+
 ## Tests
 
 ```bash
@@ -72,3 +78,5 @@ La versión predeterminada es **Tu código original · corregido**. Conserva tu 
 Se recuperan los gradientes de intensidad y la mezcla RGB de las tres salidas. Representan la respuesta del modelo, no distancia a los ejemplos. Las sigmoides independientes no son probabilidades normalizadas. Puedes mostrar las fronteras de la primera capa, consultar las salidas numéricas y cambiar de clase con Espacio al enfocar el plano.
 
 Las pruebas comparan operaciones con tu código original y verifican aprendizaje, gradientes, colores continuos, controles y traducción en Chromium de escritorio y con viewport móvil. Son pruebas de escenarios concretos, no garantías universales de convergencia ni pruebas en dispositivos físicos.
+
+La velocidad visual ahora es configurable (5, 30 épocas/s o rápida), sin cambiar la tasa de aprendizaje. Las predicciones dejan puntos coloreados por las activaciones; nunca se añaden al entrenamiento.

@@ -16,6 +16,7 @@ test.beforeEach(async ({ page }) => {
 test.afterEach(async ({ page }) => expect(page.__runtimeErrors).toEqual([]));
 
 async function configure(page, epochs = 350) {
+  await page.locator("#animation-speed").selectOption("fast");
   await page.locator("#epochs").fill(String(epochs));
   await page
     .getByRole("button", { name: "Apply & reset", exact: true })
@@ -338,4 +339,115 @@ test("three custom classes, scoped space key, and labeled alternative", async ({
     "sigmoides independientes",
   );
   await expect(page.locator("#article-detail")).toContainText("factor −2");
+});
+
+test("observation speed displays epochs individually and does not change math", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/?algorithm=backprop");
+  await expect(page.locator("#animation-speed")).toHaveValue("5");
+  await page.locator("#train").click();
+  await page.clock.runFor(220);
+  await expect(page.locator("#epoch")).toHaveText("1");
+  await page.locator("#train").click();
+  const observedLoss = await loss(page);
+  await page.locator("#reset").click();
+  await page.locator("#step").click();
+  expect(await loss(page)).toBe(observedLoss);
+  await page.locator("#animation-speed").selectOption("fast");
+  await expect(page.locator("#epoch")).toHaveText("1");
+});
+test("prediction markers retain activation colors without training or adding samples", async ({
+  page,
+}) => {
+  await page.goto("/?algorithm=backprop");
+  const initialLoss = await loss(page);
+  await page.locator("#mode").selectOption("probe");
+  for (const x of [80, 140, 200])
+    await page.locator("#plot").click({ position: { x, y: 100 } });
+  await expect(page.locator("#probe-count")).toHaveText("3");
+  await expect(page.locator("#prediction-swatch")).toBeVisible();
+  const color = await page
+    .locator("#prediction-swatch")
+    .evaluate((e) => getComputedStyle(e).backgroundColor);
+  expect(color).toMatch(/^rgb\(/);
+  await page.locator("#color-mode").selectOption("classes");
+  expect(
+    await page
+      .locator("#prediction-swatch")
+      .evaluate((e) => getComputedStyle(e).backgroundColor),
+  ).toBe(color);
+  await expect(page.locator("#epoch")).toHaveText("0");
+  await expect(page.locator("#point-count")).toHaveText("90");
+  expect(await loss(page)).toBe(initialLoss);
+  await page.locator("#clear-predictions").click();
+  await expect(page.locator("#probe-count")).toHaveText("0");
+  await expect(page.locator("#prediction-swatch")).toBeHidden();
+  await expect(page.locator("#point-count")).toHaveText("90");
+});
+for (const [field, value] of [
+  ["rate", "-0.1"],
+  ["rate", "1.1"],
+  ["epochs", "0"],
+  ["epochs", "5001"],
+  ["epochs", "1.5"],
+  ["seed", "-1"],
+  ["seed", ""],
+  ["hidden", ""],
+  ["hidden", "4,0"],
+  ["hidden", "17"],
+  ["hidden", "4,4,4,4"],
+]) {
+  test(`rejects invalid ${field}=${JSON.stringify(value)} without changing the model`, async ({
+    page,
+  }) => {
+    await page.goto("/?algorithm=backprop");
+    await page.locator("#step").click();
+    const before = await loss(page);
+    await page.locator("#" + field).fill(value);
+    await page
+      .getByRole("button", { name: "Apply & reset", exact: true })
+      .click();
+    await expect(page.getByRole("alert")).toBeVisible();
+    await expect(page.locator("#epoch")).toHaveText("1");
+    expect(await loss(page)).toBe(before);
+  });
+}
+test("one-class data refuses training and out-of-bounds coordinates are rejected", async ({
+  page,
+}) => {
+  await page.goto("/?algorithm=backprop");
+  await page.locator("#clear").click();
+  await page.locator("#plot").click({ position: { x: 80, y: 80 } });
+  await page.locator("#train").click();
+  await expect(page.getByRole("alert")).toContainText("at least two classes");
+  await expect(page.locator("#epoch")).toHaveText("0");
+  await page.getByText("Add an exact point", { exact: true }).click();
+  await page.locator("#point-x").fill("1.01");
+  await page.getByRole("button", { name: "Add point", exact: true }).click();
+  await expect(page.locator("#point-count")).toHaveText("1");
+  expect(
+    await page.locator("#point-x").evaluate((e) => e.validity.rangeOverflow),
+  ).toBe(true);
+});
+test("contradictory labels cannot falsely converge and epoch limit stops further updates", async ({
+  page,
+}) => {
+  await page.goto("/?algorithm=perceptron");
+  await configure(page, 10);
+  await page.locator("#clear").click();
+  await page.getByText("Add an exact point", { exact: true }).click();
+  for (const label of ["A", "B"]) {
+    await page
+      .getByRole("button", { name: "Class " + label, exact: true })
+      .click();
+    await page.getByRole("button", { name: "Add point", exact: true }).click();
+  }
+  await train(page);
+  await expect(page.locator("#status")).toHaveText("Epoch limit reached");
+  expect(await accuracy(page)).toBe(50);
+  await expect(page.locator("#step")).toBeDisabled();
+  await expect(page.locator("#train")).toBeDisabled();
+  await expect(page.locator("#epoch")).toHaveText("10");
 });

@@ -188,7 +188,21 @@
             ><button id="clear" class="text-button" data-i18n="clear"></button>
           </div>
           <p id="plot-hint" class="micro" data-i18n="boundaryHint"></p>
-          <p id="prediction" aria-live="polite"></p>
+          <div class="prediction-result">
+            <span id="prediction-swatch" aria-hidden="true" hidden></span>
+            <p id="prediction" aria-live="polite"></p>
+          </div>
+          <div class="prediction-tools">
+            <span
+              ><span id="probe-count">0</span>
+              <span data-i18n="probeCount"></span></span
+            ><button
+              id="clear-predictions"
+              class="text-button"
+              data-i18n="clearPredictions"
+            ></button>
+          </div>
+          <p class="micro" data-i18n="probeHint"></p>
           <details class="manual">
             <summary data-i18n="manual"></summary>
             <form id="point-form">
@@ -219,6 +233,13 @@
               ></button>
             </form>
           </details>
+          <label for="animation-speed" data-i18n="animationSpeed"></label
+          ><select id="animation-speed">
+            <option value="5" data-i18n="slowSpeed"></option>
+            <option value="30" data-i18n="mediumSpeed"></option>
+            <option value="fast" data-i18n="fastSpeed"></option>
+          </select>
+          <p class="micro" data-i18n="speedHint"></p>
           <div class="training-actions">
             <button id="train" class="primary" data-i18n="train"></button
             ><button id="step" class="secondary" data-i18n="step"></button

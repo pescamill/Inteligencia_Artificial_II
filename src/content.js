@@ -1,5 +1,15 @@
 export const copy = {
   en: {
+    animationSpeed: "Animation speed",
+    slowSpeed: "Observe · up to 5 epochs/s",
+    mediumSpeed: "Medium · up to 30 epochs/s",
+    fastSpeed: "Fast · maximum throughput",
+    speedHint:
+      "Changes playback speed, not the learning rate. Enable Neuron boundaries to watch the lines move. Each visible step is one epoch, not one sample update.",
+    probeCount: "prediction points",
+    clearPredictions: "Clear predictions",
+    probeHint:
+      "Prediction points mix the current model outputs as RGB (linear models use their score ramp). They never train the model. The last 100 are kept; resetting clears them.",
     formulation: "Mathematical formulation",
     coursework: "Your coursework · corrected",
     revised: "Revised alternatives",
@@ -96,6 +106,16 @@ export const copy = {
     noCurve: "Train the model to trace its learning curve.",
   },
   es: {
+    animationSpeed: "Velocidad de animación",
+    slowSpeed: "Observar · hasta 5 épocas/s",
+    mediumSpeed: "Media · hasta 30 épocas/s",
+    fastSpeed: "Rápida · máximo rendimiento",
+    speedHint:
+      "Cambia la velocidad visual, no la tasa de aprendizaje. Activa Fronteras de neuronas para ver las líneas moverse. Cada paso visible es una época, no una actualización por punto.",
+    probeCount: "puntos de predicción",
+    clearPredictions: "Borrar predicciones",
+    probeHint:
+      "Los puntos de predicción mezclan las salidas actuales como RGB (los modelos lineales usan su rampa). No entrenan el modelo. Se conservan los últimos 100; reiniciar los borra.",
     formulation: "Formulación matemática",
     coursework: "Tu código original · corregido",
     revised: "Alternativas revisadas",
